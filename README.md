@@ -1,69 +1,241 @@
-# Secure Auth
+# SecureAuth
 
-A production-ready, full-stack authentication system demonstrating modern web development best practices with JWT-based security, role-based access control, and a polished user interface.
+A full-stack authentication system built with React, Express, Prisma, and PostgreSQL. The project demonstrates secure user authentication with JWT-based sessions stored in HTTP-only cookies, protected client routes, and role-based access control for admin-only features.
 
-## 🎯 Overview
+## Overview
 
-Secure Auth is a complete authentication platform that showcases how to build a secure, scalable backend API with a responsive frontend. It includes user registration, login, JWT authentication with HTTP-only cookies, role-based access control (RBAC), and an admin dashboard for user management.
+SecureAuth is designed as a clean reference project for implementing modern authentication in a web application. It includes a React frontend for registration, login, and dashboard access, along with an Express backend that manages authentication, authorization, and user records in PostgreSQL.
 
-## 🛠️ Tech Stack
+## Key Features
 
-**Frontend:**
-- React 18 with TypeScript
-- Vite (rapid development & optimized builds)
-- Tailwind CSS + shadcn/ui (modern, accessible components)
-- Axios (API client)
-- React Router (client-side routing)
+- User registration and login
+- JWT authentication with HTTP-only cookies
+- Protected frontend routes
+- Role-based access control for admin users
+- Admin panel for viewing and deleting users
+- Password hashing with `bcrypt`
+- PostgreSQL database integration via Prisma
+- Responsive UI built with Tailwind CSS and shadcn/ui
 
-**Backend:**
-- Express.js with Node.js
+## Tech Stack
+
+### Frontend
+
+- React 18
 - TypeScript
-- Prisma ORM (PostgreSQL)
-- JWT Authentication (jsonwebtoken)
-- bcrypt (password hashing with 10 salt rounds)
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
+- shadcn/ui
 
-## ✨ Key Features
+### Backend
 
-✅ **User Authentication** - Secure registration & login with email validation  
-✅ **JWT-Based Security** - HTTP-only cookies with strict CORS policies  
-✅ **Role-Based Access Control (RBAC)** - Admin & User roles with protected endpoints  
-✅ **Password Security** - bcrypt hashing with configurable salt rounds  
-✅ **Protected Routes** - Client-side route protection with automatic redirects  
-✅ **Admin Dashboard** - User management, role assignment, and user deletion  
-✅ **Responsive Design** - Mobile-friendly UI built with modern component libraries  
-✅ **Production-Ready** - Environment-based configuration, error handling, and security headers  
+- Node.js
+- Express
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT
+- bcrypt
+- cookie-parser
+- CORS
 
-## 🚀 Quick Start
+## Project Structure
+
+```text
+Secure-Auth/
+|- src/                    # Frontend application
+|  |- components/          # Shared and UI components
+|  |- lib/                 # API client and utilities
+|  |- pages/               # Login, Register, Dashboard, Admin
+|  |- App.tsx              # App routes
+|  `- main.tsx             # Frontend entry point
+|- server/                 # Express backend
+|  |- prisma/              # Prisma schema and migrations
+|  `- src/
+|     |- middleware/       # Auth and role guards
+|     |- routes/           # Authentication routes
+|     `- index.ts          # Server entry point
+|- .env.example            # Frontend environment example
+|- .env.local              # Frontend local environment
+`- package.json            # Root scripts
+```
+
+## Authentication Flow
+
+1. A user registers or logs in from the frontend.
+2. The backend validates credentials and creates a JWT.
+3. The JWT is stored in an HTTP-only cookie named `authToken`.
+4. Protected routes call `/api/auth/me` to verify the current session.
+5. Admin-only routes require the authenticated user to have the `ADMIN` role.
+
+## Available Routes
+
+### Frontend Routes
+
+| Route | Access | Purpose |
+| --- | --- | --- |
+| `/login` | Public | Sign in to an existing account |
+| `/register` | Public | Create a new account |
+| `/dashboard` | Authenticated users | View account details |
+| `/admin` | Admin only | Manage registered users |
+
+### API Endpoints
+
+Base URL: `http://localhost:5000/api`
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/auth/register` | Public | Register a new user |
+| `POST` | `/auth/login` | Public | Log in and set auth cookie |
+| `POST` | `/auth/logout` | Authenticated | Clear auth cookie |
+| `GET` | `/auth/me` | Authenticated | Get current user |
+| `GET` | `/auth/admin/users` | Admin only | List all users |
+| `DELETE` | `/auth/admin/users/:id` | Admin only | Delete a user |
+| `GET` | `/health` | Public | Health check endpoint |
+
+## Environment Variables
+
+### Frontend
+
+Create or update `.env.local` in the project root:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+### Backend
+
+Create `server/.env`:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/secure_auth
+JWT_SECRET=your-strong-secret-key
+PORT=5000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+```
+
+## Local Setup
+
+### 1. Install dependencies
+
+From the project root:
 
 ```bash
-# Install frontend dependencies
 npm install
+```
 
-# Install backend dependencies
+From the `server` directory:
+
+```bash
 cd server
 npm install
+```
 
-# Set up environment variables (already created)
-# Frontend: .env.local
-# Backend: server/.env
+### 2. Configure PostgreSQL
 
-# Run in development (concurrent frontend + backend)
+Create a database named `secure_auth`, or update `DATABASE_URL` to point to an existing PostgreSQL database.
+
+### 3. Generate Prisma client and sync the database
+
+From the `server` directory:
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+```
+
+If you only want to push the schema in development:
+
+```bash
+npm run prisma:push
+```
+
+### 4. Start the application
+
+From the project root:
+
+```bash
 npm run dev
+```
 
-# Build for production
+This starts:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5000`
+
+## Build Commands
+
+From the project root:
+
+```bash
 npm run build
+```
 
-📁 Project Structure
-src - React frontend with pages, components, and API client
-server - Express backend with routes, middleware, and Prisma ORM
-prisma - Database schema and migrations
-pages - Login, Register, Dashboard, and Admin pages
-components - Reusable UI components and protected route wrapper
-🔐 Security Highlights
-HTTP-only cookies prevent XSS attacks
-Strict CORS & SameSite cookie policies
-Password hashing with bcrypt (10 rounds)
-JWT token validation on protected routes
-Role-based middleware for admin endpoints
-Environment-based sensitive configuration
-Perfect for learning full-stack authentication patterns or as a boilerplate for projects requiring robust user authentication.
+Useful additional commands:
+
+- `npm run dev:frontend` - run only the frontend
+- `npm run dev:backend` - run only the backend
+- `npm run preview` - preview the frontend production build
+
+## Database Model
+
+```prisma
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+```
+
+## Security Notes
+
+- Passwords are hashed with `bcrypt` before storage.
+- Authentication tokens are stored in HTTP-only cookies.
+- Cookies use `SameSite=Strict`.
+- Secure cookies are enabled automatically in production mode.
+- Admin routes are protected on both the client and server.
+- Users cannot delete their own account from the admin panel.
+
+## Demo Checklist
+
+To test the full flow locally:
+
+1. Register a user account.
+2. Log in and verify access to `/dashboard`.
+3. Promote a user to `ADMIN` directly in the database.
+4. Sign in as that admin user.
+5. Open `/admin` and verify user management actions.
+
+To promote a user manually:
+
+```sql
+UPDATE "User"
+SET role = 'ADMIN'
+WHERE email = 'admin@example.com';
+```
+
+## Why This Project Matters
+
+This project is a strong reference for learning or showcasing:
+
+- secure authentication fundamentals
+- cookie-based session handling with JWT
+- route protection in React
+- backend authorization middleware
+- Prisma and PostgreSQL integration in a real full-stack app
+
+## License
+
+This project is available for educational and portfolio use unless your repository specifies another license.
