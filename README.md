@@ -239,3 +239,9 @@ This project is a strong reference for learning or showcasing:
 ## License
 
 This project is available for educational and portfolio use unless your repository specifies another license.
+
+<img width="870" height="908" alt="Screenshot 2026-03-24 215610" src="https://github.com/user-attachments/assets/ee410d64-8bec-4388-8adf-5832f407a552" />
+
+<img width="772" height="1072" alt="Screenshot 2026-03-24 215558" src="https://github.com/user-attachments/assets/7dd34426-9303-4d67-9a82-5426bc2f96dd" />
+
+<img width="1567" height="867" alt="Screenshot 2026-03-24 215543" src="https://github.com/user-attachments/assets/cab58e95-575e-4ff6-90f1-e139608d6554" />
